@@ -11,7 +11,7 @@ public class Profile
 {
     private long id;
     private String profileName;
-    private String fistName;
+    private String firstName;
     private String lastName;
     private Date created;
 
@@ -23,7 +23,7 @@ public class Profile
     public Profile(long id, String profileName, String fistName, String lastName) {
         this.id = id;
         this.profileName = profileName;
-        this.fistName = fistName;
+        this.firstName = fistName;
         this.lastName = lastName;
         this.created = new Date();
     }
@@ -45,12 +45,12 @@ public class Profile
         this.profileName = profileName;
     }
 
-    public String getFistName() {
-        return fistName;
+    public String getFirstName() {
+        return firstName;
     }
 
-    public void setFistName(String fistName) {
-        this.fistName = fistName;
+    public void setFirstName(String fistName) {
+        this.firstName = fistName;
     }
 
     public String getLastName() {

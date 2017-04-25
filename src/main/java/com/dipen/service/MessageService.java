@@ -49,6 +49,7 @@ public class MessageService {
 
     public Message removeMessage(long id)
     {
+        System.out.print(id+"inside delete");
         return messages.remove(id);
     }
 }
