@@ -4,6 +4,7 @@ import com.dipen.dao.DatabaseClass;
 import com.dipen.model.Message;
 
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.List;
 import java.util.Map;
 
@@ -51,5 +52,31 @@ public class MessageService {
     {
         System.out.print(id+"inside delete");
         return messages.remove(id);
+    }
+
+    public List<Message> getAllMessagesForYear(int year)
+    {
+        List<Message> messageForYear = new ArrayList<>();
+        Calendar cal = Calendar.getInstance();
+
+        for(Message message: messages.values())
+        {
+            cal.setTime(message.getCreated());
+            if(cal.get(Calendar.YEAR)== year)
+            {
+                messageForYear.add(message);
+            }
+        }
+        return messageForYear;
+    }
+
+    public List<Message> getAllMessagesPaginated(int start,int size)
+    {
+        List<Message> list = new ArrayList<Message>(messages.values());
+        if((size+start)> list.size())
+        {
+            return list;
+        }
+        return list.subList(start,start+size);
     }
 }
