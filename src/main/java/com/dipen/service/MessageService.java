@@ -1,6 +1,7 @@
 package com.dipen.service;
 
 import com.dipen.dao.DatabaseClass;
+import com.dipen.exception.DataNotFoundException;
 import com.dipen.model.Message;
 
 import java.util.ArrayList;
@@ -28,7 +29,12 @@ public class MessageService {
 
     public Message getMessage(long id)
     {
-        return messages.get(id);
+        Message msg = messages.get(id);
+        if(msg == null)
+        {
+            throw new DataNotFoundException("Message with id "+ id +" not found");
+        }
+        return msg;
     }
 
     public Message addMessage(Message message)
