@@ -76,4 +76,19 @@ public class MessageResource {
     {
         return "Method path test";
     }
+
+ /*   @GET
+    @Path("/{messageId}/comments")
+    @Produces(MediaType.TEXT_PLAIN)
+    public String getCommentsByMessage()
+    {
+        return "Getting Sub resoruces";
+    }*/
+
+    @Path("/{messageId}/comments")
+    @Produces(MediaType.TEXT_PLAIN)
+    public CommentResource getCommentsByMessage()
+    {
+        return new CommentResource();
+    }
 }
