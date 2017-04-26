@@ -4,7 +4,12 @@ import com.dipen.model.Message;
 import com.dipen.service.MessageService;
 
 import javax.ws.rs.*;
+import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
+import javax.ws.rs.core.Response;
+import javax.ws.rs.core.UriInfo;
+import java.net.URI;
+import java.net.URISyntaxException;
 import java.util.List;
 
 /**
@@ -90,5 +95,30 @@ public class MessageResource {
     public CommentResource getCommentsByMessage()
     {
         return new CommentResource();
+    }
+
+    /** Sample to modify headers and body by using Response Object**/
+    @GET
+    @Path("/customHeader/{messageId}")
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response getMessageWithStatus(@PathParam("messageId") long messageId, @Context UriInfo uriInfo) throws URISyntaxException {
+       /* setting status code and location of newly created resource
+        return Response.status(Response.Status.CREATED).
+                entity(ms.getMessage(messageId)).
+                header("location","messages/customHeader/1").
+                build();*/
+
+        //alternative and shortchut of above method, which is recommended way of implementing
+    /*    Message message = ms.getMessage(messageId);
+        return Response.created(new URI("/messages/"+message.getId())).
+                entity(message).
+                build();*/
+        //generating URI dynamically using UriInfo
+        Message message = ms.getMessage(messageId);
+        String strMsgId = String.valueOf(message.getId());
+        URI uri = uriInfo.getAbsolutePathBuilder().path(strMsgId).build();
+        return Response.created(uri).
+                entity(message).
+                build();
     }
 }
