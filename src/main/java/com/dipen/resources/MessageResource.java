@@ -2,6 +2,7 @@ package com.dipen.resources;
 
 import com.dipen.model.Message;
 import com.dipen.service.MessageService;
+import org.glassfish.jersey.server.Uri;
 
 import javax.ws.rs.*;
 import javax.ws.rs.core.Context;
@@ -43,9 +44,40 @@ public class MessageResource {
     @GET
     @Path("/{messageId}")
     @Produces(MediaType.APPLICATION_JSON)
-    public Message getMessage(@PathParam("messageId") long messageId)
+    public Message getMessage(@PathParam("messageId") long messageId, @Context UriInfo uriInfo)
     {
-        return ms.getMessage(messageId);
+        Message message =  ms.getMessage(messageId);
+        String url = getUriForSelf(uriInfo, message);
+        message.addLink(url,"self");
+        message.addLink(getUriForProfile(uriInfo, message),"profile");
+        message.addLink(getUriForComments(uriInfo, message),"comments");
+        return message;
+    }
+
+    private String getUriForComments(UriInfo uriInfo, Message message) {
+        return uriInfo.getBaseUriBuilder().
+                path(MessageResource.class).
+                path(MessageResource.class,"getCommentsByMessage" ).
+                path(CommentResource.class).
+                resolveTemplate("messageId",Long.toString(message.getId())).
+                build().
+                toString();
+    }
+
+    private String getUriForProfile(UriInfo uriInfo, Message message) {
+        return uriInfo.getBaseUriBuilder().
+                path(ProfileResource.class).
+                path(message.getAuthor() ).
+                build().
+                toString();
+    }
+
+    public String getUriForSelf(UriInfo uriInfo, Message message) {
+        return uriInfo.getBaseUriBuilder().
+                    path(MessageResource.class).
+                    path(Long.toString(message.getId())).
+                    build().
+                    toString();
     }
 
     @POST
