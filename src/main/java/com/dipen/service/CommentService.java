@@ -2,8 +2,11 @@ package com.dipen.service;
 
 import com.dipen.dao.DatabaseClass;
 import com.dipen.model.Comment;
+import com.dipen.model.ErrorMessage;
 import com.dipen.model.Message;
 
+import javax.ws.rs.WebApplicationException;
+import javax.ws.rs.core.Response;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -19,7 +22,25 @@ public class CommentService {
 	}
 	
 	public Comment getComment(long messageId, long commentId) {
-		Map<Long, Comment> comments = messages.get(messageId).getComments();
+		Message message =  messages.get(messageId);
+		/* without response object
+		if(message == null)
+		{
+			throw new WebApplicationException(Response.Status.NOT_FOUND);
+		}*/
+
+		//with response object
+		// not good practiece as business logic and presetation layer got mixed up
+		ErrorMessage errorMessage = new ErrorMessage("Messege Not fouund",404,"www.google.com");
+		Response response = Response.status(Response.Status.NOT_FOUND).
+				entity(errorMessage).
+				build();
+		if(message == null)
+		{
+			throw new WebApplicationException(response);
+		}
+
+		Map<Long, Comment> comments =message.getComments();
 		return comments.get(commentId);
 	}
 	
